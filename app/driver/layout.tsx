@@ -1,0 +1,21 @@
+
+import { getCurrentUser } from "@/lib/auth";
+import { redirect } from "next/navigation";
+
+export default async function DriverLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const user = await getCurrentUser();
+
+  if (!user) {
+    redirect("/login");
+  }
+
+  if (user.role !== "DRIVER" && user.role !== "BOTH") {
+    redirect("/dashboard");
+  }
+
+  return <>{children}</>;
+}

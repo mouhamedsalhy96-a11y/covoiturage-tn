@@ -1,0 +1,105 @@
+
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+
+
+model User {
+  id           String    @id @default(cuid())
+  name         String
+  email        String    @unique
+  passwordHash String
+  phone        String?
+  city         String?
+  bio          String?
+  role         String    @default("PASSENGER")
+  createdAt    DateTime  @default(now())
+
+  trips        Trip[]    @relation("DriverTrips")
+  bookings     Booking[] @relation("PassengerBookings")
+  reviews      Review[]  @relation("DriverReviews")
+}
+
+model Trip {
+  id          String    @id @default(cuid())
+  fromCity    String
+  toCity      String
+  date        String
+  time        String
+  price       Float
+  seats       Int
+  pickupPoint String?
+  luggage     String?
+  notes       String?
+  createdAt   DateTime  @default(now())
+
+  driverId    String
+  driver      User      @relation("DriverTrips", fields: [driverId], references: [id])
+
+  bookings    Booking[]
+  reviews     Review[]
+  messages    Message[]
+}
+
+
+
+
+
+
+model Booking {
+  id                   String   @id @default(cuid())
+  passengerName        String
+  passengerEmail       String
+  seatsBooked          Int
+  totalPrice           Float
+  status               String   @default("Pending")
+  paymentStatus        String   @default("UNPAID")
+  paymentMethod        String?
+  cashCollectionStatus String?
+  cashCollectedAt      DateTime?
+  paymentReference     String?
+  paidAt               DateTime?
+  createdAt            DateTime @default(now())
+
+  tripId               String
+  trip                 Trip     @relation(fields: [tripId], references: [id])
+
+  passengerId          String?
+  passenger            User?    @relation("PassengerBookings", fields: [passengerId], references: [id])
+}
+
+
+
+
+
+
+model Review {
+  id            String   @id @default(cuid())
+  passengerName String
+  rating        Int
+  comment       String
+  createdAt     DateTime @default(now())
+
+  driverId      String
+  driver        User     @relation("DriverReviews", fields: [driverId], references: [id])
+
+  tripId        String?
+  trip          Trip?    @relation(fields: [tripId], references: [id])
+}
+
+model Message {
+  id        String   @id @default(cuid())
+  sender    String
+  text      String
+  createdAt DateTime @default(now())
+
+  tripId    String?
+  trip      Trip?    @relation(fields: [tripId], references: [id])
+}
