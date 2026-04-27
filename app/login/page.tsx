@@ -98,7 +98,7 @@ export default function LoginPage() {
         )}
 
         <p style={{ marginTop: "20px" }}>
-          Demo user: <strong>mohamed@example.com</strong> / <strong>password123</strong>
+          
         </p>
       </form>
     </main>
