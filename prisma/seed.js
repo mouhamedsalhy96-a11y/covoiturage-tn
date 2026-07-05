@@ -191,13 +191,6 @@ async function main() {
       },
     ],
   });
-
-  console.log("Database seeded successfully.");
-  console.log("Demo accounts:");
-  console.log("mohamed@example.com / password123");
-  console.log("ahmed@example.com / password123");
-  console.log("sara@example.com / password123");
-  console.log("omar@example.com / password123");
 }
 
 main()
